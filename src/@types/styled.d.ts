@@ -1,4 +1,4 @@
-import styled from "styled-components/native";
+import "styled-components/native";
 import theme from "src/theme";
 
 declare module "styled-components" {
