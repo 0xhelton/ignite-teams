@@ -16,6 +16,7 @@ import { AppError } from "@utils/AppError";
 import { playerAddByGroup } from "@storage/playerAddByGroup";
 import { PlayerStorageDTO } from "@storage/playerStorageDTO";
 import { playerGetByGroupAndTeam } from "@storage/playerGetByGroupAndTeam";
+import { playerRemoveByGroup } from "@storage/playerRemoveByGroup";
 
 type RouteParams = {
   group: string;
@@ -68,6 +69,16 @@ export function Players() {
     }
   }
 
+  async function handlePlayerRemove(playerName: string) {
+    try {
+      await playerRemoveByGroup(playerName, group);
+      fetchPlayersByTeam();
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Remover pessoa", "Não foi pessível remover essa pessoa");
+    }
+  }
+
   useEffect(() => {
     fetchPlayersByTeam();
   }, [team]);
@@ -104,7 +115,7 @@ export function Players() {
       <FlatList
         data={players}
         keyExtractor={(item) => item.name}
-        renderItem={({ item }) => <PlayerCard name={item.name} onRemove={() => {}} />}
+        renderItem={({ item }) => <PlayerCard name={item.name} onRemove={() => handlePlayerRemove(item.name)} />}
         ListEmptyComponent={() => <ListEmpty message="Não há pessoas nesse time" />}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[{ paddingBottom: 100 }, players.length === 0 && { flex: 1 }]}
